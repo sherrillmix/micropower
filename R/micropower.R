@@ -434,8 +434,7 @@ bootDM <- function(dm,subject_group_vector) {
   groups <- sort(unique(rownames(groupNames(dm))))
   s <- Map(function(g,v) sample(grep(g,rownames(dm),value=TRUE),v,replace=TRUE),groups,subject_group_vector)
   s <- do.call(c,s)
-  s <- dm[s,s]
-  return(s)
+  return(dm[s,s])
 }
 
 
