@@ -460,7 +460,7 @@ bootPower <- function(dm_list,boot_number=100,subject_group_vector=c(3,4,5),alph
   r <- lapply(p,FUN=function(x) {sapply(x,calcR2)})
   p <- lapply(p,FUN=function(x) {sapply(x,calcPERMANOVAp)})
   dm <- data.frame(effect=e,simulated_omega2=simulated_omega2,observed_omega2=do.call(c,o),observed_R2=do.call(c,r),p=do.call(c,p))
-  dm <- ddply(dm,.(effect),here(transform),power=length(p[p<alpha])/length(p))
+  dm <- ddply(dm,.(effect),here(transform),power=mean(p<alpha))
   dm$observed_omega2[dm$observed_omega2<0] <- 0
   dm$simulated_omega2[dm$simulated_omega2<0] <- 0
   return(dm)
