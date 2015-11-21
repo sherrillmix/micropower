@@ -30,22 +30,6 @@ rareSamp <- function(otu_vector,rare_depth=0.5) {
 }
 
 
-#' @title Calculate weighted Jaccard distance between two OTU vectors
-#' @description Wrapper for \code{\link{vegan}} package distance function, to calculate weighted Jaccard distance.
-#' @import vegan
-#' @param sampleA numeric vector labelled with OTU names
-#' @param sampleB numeric vector labelled with OTU names
-#' @return numeric weighted Jaccard distance
-#' @seealso \code{\link{simSamp}}, \code{\link{rareSamp}}
-#' @export
-#' @examples
-#' calcWJsample(rareSamp(simSamp(100,10),0.5),rareSamp(simSamp(100,10),0.5))
-calcWJsample <- function(sampleA=rareSamp(simSamp(,10),0.5),sampleB=rareSamp(simSamp(,10),0.5)) {
-  d <- vegdist(as.data.frame(rbind(sampleA,sampleB)),method="jaccard")
-  return(as.numeric(d))
-}
-
-
 #' @title Simulate OTU table for presence-absence or abundance-weighted analysis
 #' @description Incorporates within-group distance simulation from OTU number and depth of subsampling (rarefying) with group-level differences modeled by segregating OTU membership between groups.
 #' @details For weighted analysis, specify a sequence depth greater than 1; for unweighted analyses, sequence depth is 1 (default).
@@ -149,11 +133,7 @@ hashSD <- function(rare_depth=0.5,otu_number_range=c(10,100,1000,10000),sim_numb
 #' @examples
 #' calcUJstudy(simStudy(c(16,16,16),100,,0.8,0.1))
 calcUJstudy <- function(otu_table) {
-  #dm <- expand.grid(r=colnames(otu_table),c=colnames(otu_table),stringsAsFactors=FALSE)
-  #dm$d <- unlist(Map(function(r,c) {calcUJsample(otu_table[,r],otu_table[,c])},dm$r,dm$c),use.names=FALSE)
-  #dm <- acast(dm,r~c,value.var="d")
   dm<-as.matrix(vegdist(t(otu_table),method='jaccard',binary=TRUE))
-  #browser()
   return(dm)
 }
 
@@ -168,9 +148,7 @@ calcUJstudy <- function(otu_table) {
 #' @examples
 #' calcWJstudy(simStudy(c(16,16,16),100,10,0.8,0.1))
 calcWJstudy <- function(otu_table) {
-  dm <- expand.grid(r=colnames(otu_table),c=colnames(otu_table),stringsAsFactors=FALSE)
-  dm$d <- unlist(Map(function(r,c) {calcWJsample(otu_table[,r],otu_table[,c])},dm$r,dm$c),use.names=FALSE)
-  dm <- acast(dm,r~c,value.var="d")
+  dm<-as.matrix(vegdist(t(otu_table),method='jaccard'))
   return(dm)
 }
 
