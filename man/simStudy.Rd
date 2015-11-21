@@ -4,7 +4,7 @@
 \alias{simStudy}
 \title{Simulate OTU table for presence-absence or abundance-weighted analysis}
 \usage{
-simStudy(group_size_vector = c(100, 100, 100), otu_number = 1000,
+simStudy(group_size_vector = c(20, 30, 25), otu_number = 1000,
   sequence_depth = 1, rare_depth = 0.4, effect = 0.2)
 }
 \arguments{

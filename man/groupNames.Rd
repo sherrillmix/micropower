@@ -19,7 +19,7 @@ Convert subject names to group-level names to permit PERMANOVA testing and analy
 Input distance matrix colnames and rownames must be formatted "g2s12" for group 2, subject 12.
 }
 \examples{
-groupNames(calcUJstudy(simStudy()))
+groupNames(rownames(calcUJstudy(simStudy())))
 }
 \seealso{
 \code{\link{calcUJstudy}}, \code{\link{calcWJstudy}}

@@ -43,7 +43,7 @@ rareSamp <- function(otu_vector,rare_depth=0.5) {
 #' @export
 #' @examples
 #' simStudy(c(16,16,16),100,10,0.8,0.1)
-simStudy <- function(group_size_vector=c(100,100,100),otu_number=1000,sequence_depth=1,rare_depth=0.4,effect=0.2) {
+simStudy <- function(group_size_vector=c(20,30,25),otu_number=1000,sequence_depth=1,rare_depth=0.4,effect=0.2) {
   otus <- simSamp(otu_number/(1+effect),sequence_depth)
   rare <- structure(lapply(as.list(seq(sum(group_size_vector))),FUN=function(x) {rareSamp(otus,rare_depth)}),.Names=paste0("s",as.character(seq(sum(group_size_vector)))))
   groups <- unlist(mapply(FUN=function(a,b) {rep(paste0("g",a),b)},a=as.character(seq_along(group_size_vector)),b=group_size_vector))
@@ -72,10 +72,10 @@ simStudy <- function(group_size_vector=c(100,100,100),otu_number=1000,sequence_d
 #' @seealso \code{\link{simStudy}}, \code{\link{calcUJstudy}}, \code{\link{calcWJstudy}}
 #' @export
 #' @examples
-#' simPower(c(16,16,16),100,10,0.8,seq(0,0.3,length.out=10))
-#' sapply(simPower(c(16,16,16),100,10,0.8,seq(0,0.3,length.out=10)),
+#' simPower(c(16,16,16),100,10,0.8)
+#' sapply(simPower(c(16,16,16),100,10,0.8),
 #'   FUN=function(x) {calcOmega2(calcWJstudy(x))})
-simPower <- function(group_size_vector=c(100,100,100), otu_number=1000, sequence_depth=1, rare_depth=0.5, effect_range=seq(0,0.3,length.out=100)) {
+simPower <- function(group_size_vector=c(20,25,30), otu_number=1000, sequence_depth=1, rare_depth=0.5, effect_range=seq(0,0.3,length.out=10)) {
   p <- structure(.Data=as.list(effect_range),.Names=as.character(effect_range))
   out <- lapply(p,FUN=function(x) {simStudy(group_size_vector,otu_number,sequence_depth,rare_depth,x)})
   return(out)
@@ -114,8 +114,8 @@ hashMean <- function(rare_levels=runif(1000,0,1),rep_per_level=1,otu_number=1000
 #' @seealso \code{\link{simSamp}}, \code{\link{calcWJstudy}}
 #' @export
 #' @examples
-#' hashSD(0.5,c(10,100,1000),1000,10)
-#' sapply(hashSD(),FUN=function(x) {sd(lowerTriDM(calcWJstudy(x)))})
+#' hashSD(0.5,c(10,100,1000),100,10)
+#' sapply(hashSD(otu_number_range=c(10,100,1000)),FUN=function(x) {sd(lowerTriDM(calcWJstudy(x)))})
 hashSD <- function(rare_depth=0.5,otu_number_range=c(10,100,1000,10000),sim_number=100,sequence_depth=10) {
   o <- structure(.Data=as.list(otu_number_range),.Names=paste0("otu",as.character(otu_number_range)))
   o <- lapply(o,FUN=function(x) {replicate(sim_number,rareSamp(simSamp(x,sequence_depth),rare_depth))})
@@ -179,7 +179,7 @@ simTreeTable <- function(otu_table) {
 #' @seealso \code{\link{simPower}}, \code{\link{rtree}}, \code{\link{write.tree}}
 #' @export
 #' @examples
-#' simTreeList(simPower(c(100,100,100),100,10,0.5,seq(0,0.3,length.out=100)))
+#' simTreeList(simPower(c(20,20,20),100,10,0.5,seq(0,0.3,length.out=10)))
 simTreeList <- function(otu_table_list) {
   otus <- unique(do.call(c,lapply(otu_table_list,rownames)))
   tree <- rtree(n=length(otus),rooted=F,tip.label=otus,br=rlnorm)
@@ -210,7 +210,7 @@ writeOTUtable <- function(otu_table, otu_table_name) {
 #' @seealso \code{\link{simPower}}
 #' @export
 #' @examples
-#' writeOTUlist(simPower(c(100,100,100),100,1,0.5,seq(0,0.3,length.out=100)))
+#' writeOTUlist(simPower(c(20,20,20),100,1,0.5,seq(0,0.3,length.out=10)))
 writeOTUlist <- function(otu_table_list) {
   Map(writeOTUtable, otu_table_list, as.list(names(otu_table_list)))
 }
@@ -271,7 +271,7 @@ readDMmetric <- function(metric="weighted_normalized_unifrac") {
 #' @seealso \code{\link{calcUJstudy}}, \code{\link{calcWJstudy}}
 #' @export
 #' @examples
-#' groupNames(calcUJstudy(simStudy()))
+#' groupNames(rownames(calcUJstudy(simStudy())))
 groupNames <- function(x){
   return(gsub("(s.*)","",x,perl=T))
 }
@@ -337,7 +337,7 @@ PERMANOVA <- function(dm) {
 #' @seealso \code{\link{calcUJstudy}}, \code{\link{calcWJstudy}}
 #' @export
 #' @examples
-#' calcR2(calcUJstudy(simStudy()))
+#' calcR2(PERMANOVA(calcUJstudy(simStudy())))
 calcR2 <- function(perm) {
   cod <- perm$aov.tab$R2[1]
   return(cod)
@@ -386,7 +386,7 @@ bootDM <- function(dm,subject_group_vector) {
 #' @seealso \code{\link{simPower}}, \code{\link{bootDM}}
 #' @export
 #' @examples
-#' bootPower(lapply(simPower(),calcUJstudy))
+#' bootPower(lapply(simPower(c(20,20,20),effect_range=seq(0,.3,.15)),calcUJstudy))
 bootPower <- function(dm_list,boot_number=100,subject_group_vector=c(3,4,5),alpha=0.05) {
   e <- rep(names(dm_list),each=boot_number)
   simulated_omega2 <- rep(sapply(dm_list,calcOmega2),each=boot_number)
@@ -410,10 +410,10 @@ bootPower <- function(dm_list,boot_number=100,subject_group_vector=c(3,4,5),alph
 #' @param distance_calc distance function to be used to calculation (either \code{\link{calcUJstudy}} or \code{\link{calcWJstudy}}) 
 #' @param ... additional arguments to \code{\link{simPower}}
 #' @return A data frame with columns effect and power giving the estimted power to detect an effect of a given size
-#' @seealso \code{\link{simPower}}, \code{\link{bootDM}}
+#' @seealso \code{\link{simPower}}, \code{\link{bootPower}}
 #' @export
 #' @examples
-#' calculatePower(c(10,10),otu_number=100,rare_depth=.25,effect_range=seq(0,.3,length.out=10))
+#' estimatePower(c(10,10),otu_number=100,rare_depth=.25,effect_range=seq(0,.3,.1))
 estimatePower<-function(group_sizes,boot_args=list(),distance_calc=calcUJstudy,...){
   otu_tables <- simPower(group_size_vector = group_sizes*20,...)
   uj <- lapply(otu_tables, distance_calc)

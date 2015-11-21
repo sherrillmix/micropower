@@ -4,9 +4,9 @@
 \alias{simPower}
 \title{Simulate a list of OTU tables encoding a range of effect sizes for presence-absence or abundance-weighted analysis}
 \usage{
-simPower(group_size_vector = c(100, 100, 100), otu_number = 1000,
+simPower(group_size_vector = c(20, 25, 30), otu_number = 1000,
   sequence_depth = 1, rare_depth = 0.5, effect_range = seq(0, 0.3,
-  length.out = 100))
+  length.out = 10))
 }
 \arguments{
 \item{group_size_vector}{numeric vector representing subjects per exposure/intervention group}
@@ -29,8 +29,8 @@ Extends the \code{\link{simStudy}} function to generate a list of OTU tables acc
 For weighted analysis, specify a sequence depth greater than 1; for unweighted analyses, sequence depth is 1 (default).
 }
 \examples{
-simPower(c(16,16,16),100,10,0.8,seq(0,0.3,length.out=100))
-sapply(simPower(c(16,16,16),100,10,0.8,seq(0,0.3,length.out=100)),
+simPower(c(16,16,16),100,10,0.8)
+sapply(simPower(c(16,16,16),100,10,0.8),
   FUN=function(x) {calcOmega2(calcWJstudy(x))})
 }
 \seealso{

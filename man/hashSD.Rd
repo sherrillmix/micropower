@@ -26,8 +26,8 @@ Extends the \code{\link{simSamp}} function to generate a list of OTU tables repr
 For weighted analysis, specify a sequence depth greater than 1; for unweighted analyses, sequence depth is 1 (default).
 }
 \examples{
-hashSD(0.5,c(10,100,1000),1000,10)
-sapply(hashSD(),FUN=function(x) {sd(lowerTriDM(calcWJstudy(x)))})
+hashSD(0.5,c(10,100,1000),100,10)
+sapply(hashSD(otu_number_range=c(10,100,1000)),FUN=function(x) {sd(lowerTriDM(calcWJstudy(x)))})
 }
 \seealso{
 \code{\link{simSamp}}, \code{\link{calcWJstudy}}

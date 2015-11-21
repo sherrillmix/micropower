@@ -23,7 +23,7 @@ A data frame relating PERMANOVA power to effect size quantified by the coefficie
 Estimates the statistical power of PERMANOVA testing to detect the group-level effect in the given distance matrices, based upon bootstrap sampling.
 }
 \examples{
-bootPower(lapply(simPower(),calcUJstudy))
+bootPower(lapply(simPower(c(20,20,20),effect_range=seq(0,.3,.15)),calcUJstudy))
 }
 \seealso{
 \code{\link{simPower}}, \code{\link{bootDM}}

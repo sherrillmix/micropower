@@ -16,7 +16,7 @@ Writes tab-seperated files to the working directory.
 Exports a list of simulated OTU tables as tab-separated files to permit processing for pairwise distances by bioinformatic pipelines.
 }
 \examples{
-writeOTUlist(simPower(c(100,100,100),100,1,0.5,seq(0,0.3,length.out=100)))
+writeOTUlist(simPower(c(20,20,20),100,1,0.5,seq(0,0.3,length.out=10)))
 }
 \seealso{
 \code{\link{simPower}}

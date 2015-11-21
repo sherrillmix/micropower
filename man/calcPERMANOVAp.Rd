@@ -19,7 +19,7 @@ The probability of the observed or greater effect under the null hypothesis, cal
 A wrapper for the \code{\link{PERMANOVA}} function, which itself utilizes the \code{\link{adonis}} function included in the \code{\link{vegan}} package.
 }
 \examples{
-calcPERMANOVAp(calcUJstudy(simStudy()))
+calcPERMANOVAp(PERMANOVA(calcUJstudy(simStudy())))
 }
 \seealso{
 \code{\link{calcUJstudy}}, \code{\link{calcWJstudy}}

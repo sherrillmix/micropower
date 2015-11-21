@@ -19,7 +19,7 @@ The proportion of distance accounted for by the grouping factor.
 A wrapper for the \code{\link{PERMANOVA}} function, which itself utilizes the \code{\link{adonis}} function included in the \code{\link{vegan}} package.
 }
 \examples{
-calcR2(calcUJstudy(simStudy()))
+calcR2(PERMANOVA(calcUJstudy(simStudy())))
 }
 \seealso{
 \code{\link{calcUJstudy}}, \code{\link{calcWJstudy}}

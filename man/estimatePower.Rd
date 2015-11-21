@@ -25,9 +25,9 @@ Perform bootstrap power analysis
 Estimates the statistical power of PERMANOVA testing to detect the group-level effect for a given set of parameters matrices, based upon bootstrap sampling.
 }
 \examples{
-calculatePower(c(10,10),otu_number=100,rare_depth=.25,effect_range=seq(0,.3,length.out=10))
+estimatePower(c(10,10),otu_number=100,rare_depth=.25,effect_range=seq(0,.3,.1))
 }
 \seealso{
-\code{\link{simPower}}, \code{\link{bootDM}}
+\code{\link{simPower}}, \code{\link{bootPower}}
 }
 
