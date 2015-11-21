@@ -63,7 +63,7 @@ simStudy <- function(group_size_vector=c(20,30,25),otu_number=1000,sequence_dept
 #' @title Simulate a list of OTU tables encoding a range of effect sizes for presence-absence or abundance-weighted analysis
 #' @description Extends the \code{\link{simStudy}} function to generate a list of OTU tables according to a specified range of group-level effects.
 #' @details For weighted analysis, specify a sequence depth greater than 1; for unweighted analyses, sequence depth is 1 (default).
-#' @param group_size_vector numeric vector representing subjects per exposure/intervention group
+#' @param group_size_vector numeric vector representing subjects per exposure/intervention group. NOTE that this should be larger than the true group sizes if the output will be used for downstream power calculations. True group sizes multiplied by 20 provides a good compromise between efficiency and avoiding oversampling.
 #' @param otu_number number of simulated OTUs
 #' @param sequence_depth number of sequence counts per OTU bin
 #' @param rare_depth proportion of sequence counts to retain after subsampling

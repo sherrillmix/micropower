@@ -9,7 +9,7 @@ simPower(group_size_vector = c(20, 25, 30), otu_number = 1000,
   length.out = 10))
 }
 \arguments{
-\item{group_size_vector}{numeric vector representing subjects per exposure/intervention group}
+\item{group_size_vector}{numeric vector representing subjects per exposure/intervention group. NOTE that this should be larger than the true group sizes if the output will be used for downstream power calculations. True group sizes multiplied by 20 provides a good compromise between efficiency and avoiding oversampling.}
 
 \item{otu_number}{number of simulated OTUs}
 
