@@ -19,6 +19,6 @@ Generates a square matrix of pairwise unweighted Jaccard distances from an OTU t
 calcUJstudy(simStudy(c(16,16,16),100,,0.8,0.1))
 }
 \seealso{
-\code{\link{simStudyU}}, \code{\link{calcDistW}}
+\code{\link{simStudy}}, \code{\link{calcWJstudy}}
 }
 

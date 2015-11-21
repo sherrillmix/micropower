@@ -22,6 +22,6 @@ A wrapper for the \code{\link{rtree}} function included with the \code{\link{ape
 simTreeList(simPower(c(100,100,100),100,10,0.5,seq(0,0.3,length.out=100)))
 }
 \seealso{
-\code{\link{simPowerU}}, \code{\link{simPowerW}}, \code{\link{rtree}}, \code{\link{write.tree}}
+\code{\link{simPower}}, \code{\link{rtree}}, \code{\link{write.tree}}
 }
 

@@ -21,6 +21,6 @@ Performs random subsampling without replacement from simulated OTU vector.
 rareSamp(simSamp(100,10),0.6)
 }
 \seealso{
-\code{\link{simSampU}}, \code{\link{simSampW}}
+\code{\link{simSamp}}
 }
 

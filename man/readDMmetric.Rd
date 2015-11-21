@@ -6,6 +6,9 @@
 \usage{
 readDMmetric(metric = "weighted_normalized_unifrac")
 }
+\arguments{
+\item{metric}{regular expression to select file for reading in}
+}
 \value{
 A list of square distance matrices.
 }

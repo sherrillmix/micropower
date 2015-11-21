@@ -30,6 +30,6 @@ hashSD(0.5,c(10,100,1000),1000,10)
 sapply(hashSD(),FUN=function(x) {sd(lowerTriDM(calcWJstudy(x)))})
 }
 \seealso{
-\code{\link{simSampW}}, \code{\link{calcDistW}}
+\code{\link{simSamp}}, \code{\link{calcWJstudy}}
 }
 

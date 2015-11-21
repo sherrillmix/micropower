@@ -19,6 +19,6 @@ Exports a list of simulated OTU tables as tab-separated files to permit processi
 writeOTUlist(simPower(c(100,100,100),100,1,0.5,seq(0,0.3,length.out=100)))
 }
 \seealso{
-\code{\link{simPowerU}}, \code{\link{simPowerW}}
+\code{\link{simPower}}
 }
 

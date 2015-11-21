@@ -4,7 +4,7 @@
 \alias{calcPERMANOVAp}
 \title{Calculate the PERMANOVA p-value.}
 \usage{
-calcPERMANOVAp(perm = PERMANOVA(dm))
+calcPERMANOVAp(perm)
 }
 \arguments{
 \item{perm}{output from the \code{\link{PERMANOVA}} function}

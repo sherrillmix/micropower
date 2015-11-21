@@ -24,6 +24,6 @@ For weighted analysis, specify a sequence depth greater than 1; for unweighted a
 simSamp(100,10)
 }
 \seealso{
-\code{\link{simSampU}}
+\code{\link{simSamp}}
 }
 

@@ -11,7 +11,7 @@ estimatePower(group_sizes, boot_args = list(), distance_calc = calcUJstudy,
 \arguments{
 \item{group_sizes}{numeric vector representing subjects per exposure/intervention group}
 
-\item{boot_args}{a list with named elements specifying additional arguments to \code{\link{bootArgs}}}
+\item{boot_args}{a list with named elements specifying additional arguments to \code{\link{bootPower}}}
 
 \item{distance_calc}{distance function to be used to calculation (either \code{\link{calcUJstudy}} or \code{\link{calcWJstudy}})}
 

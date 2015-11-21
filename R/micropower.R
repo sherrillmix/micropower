@@ -4,7 +4,7 @@
 #' @param otu_number number of OTUs
 #' @param sequence_depth number of sequence counts per OTU bin
 #' @return numeric vector labelled with OTU names
-#' @seealso \code{\link{simSampU}}
+#' @seealso \code{\link{simSamp}}
 #' @export
 #' @examples
 #' simSamp(100,10)
@@ -19,12 +19,12 @@ simSamp <- function(otu_number=1000,sequence_depth=1) {
 #' @param otu_vector numeric vector labelled with OTU names
 #' @param rare_depth proportion of sequence counts to retain after subsampling
 #' @return numeric vector labelled with OTU names
-#' @seealso \code{\link{simSampU}}, \code{\link{simSampW}}
+#' @seealso \code{\link{simSamp}}
 #' @export
 #' @examples
 #' rareSamp(simSamp(100,10),0.6)
 rareSamp <- function(otu_vector,rare_depth=0.5) {
-  r <- as.vector(rrarefy(otu_vector,rare_depth*sum(otu_vector)))
+  r <- as.vector(vegan::rrarefy(otu_vector,rare_depth*sum(otu_vector)))
   r <- structure(.Data=r,.Names=names(otu_vector))
   return(r)
 }
@@ -72,8 +72,9 @@ simStudy <- function(group_size_vector=c(100,100,100),otu_number=1000,sequence_d
 #' @seealso \code{\link{simStudy}}, \code{\link{calcUJstudy}}, \code{\link{calcWJstudy}}
 #' @export
 #' @examples
-#' simPower(c(16,16,16),100,10,0.8,seq(0,0.3,length.out=100))
-#' sapply(simPower(c(16,16,16),100,10,0.8,seq(0,0.3,length.out=100)),FUN=function(x) {calcOmega2(calcWJstudy(x))})
+#' simPower(c(16,16,16),100,10,0.8,seq(0,0.3,length.out=10))
+#' sapply(simPower(c(16,16,16),100,10,0.8,seq(0,0.3,length.out=10)),
+#'   FUN=function(x) {calcOmega2(calcWJstudy(x))})
 simPower <- function(group_size_vector=c(100,100,100), otu_number=1000, sequence_depth=1, rare_depth=0.5, effect_range=seq(0,0.3,length.out=100)) {
   p <- structure(.Data=as.list(effect_range),.Names=as.character(effect_range))
   out <- lapply(p,FUN=function(x) {simStudy(group_size_vector,otu_number,sequence_depth,rare_depth,x)})
@@ -92,7 +93,7 @@ simPower <- function(group_size_vector=c(100,100,100), otu_number=1000, sequence
 #' @seealso \code{\link{simSamp}}, \code{\link{calcWJstudy}}
 #' @export
 #' @examples
-#' hashMean(,10,1000,10)
+#' hashMean(c(.1,.5,.9),10,1000,10)
 #' sapply(hashMean(runif(100,0,1),1,1000,10),FUN=function(x) {mean(lowerTriDM(calcWJstudy(x)))})
 hashMean <- function(rare_levels=runif(1000,0,1),rep_per_level=1,otu_number=1000,sequence_depth=1) {
   r <- rep(rare_levels,each=rep_per_level)
@@ -110,7 +111,7 @@ hashMean <- function(rare_levels=runif(1000,0,1),rep_per_level=1,otu_number=1000
 #' @param sim_number number of simulated subjects per OTU number
 #' @param sequence_depth number of sequence counts per OTU bin
 #' @return list of two-dimensional-matrix OTU tables
-#' @seealso \code{\link{simSampW}}, \code{\link{calcDistW}}
+#' @seealso \code{\link{simSamp}}, \code{\link{calcWJstudy}}
 #' @export
 #' @examples
 #' hashSD(0.5,c(10,100,1000),1000,10)
@@ -125,30 +126,28 @@ hashSD <- function(rare_depth=0.5,otu_number_range=c(10,100,1000,10000),sim_numb
 
 #' @title Calculate pairwise unweighted Jaccard distances from an OTU table
 #' @description Generates a square matrix of pairwise unweighted Jaccard distances from an OTU table.
-#' @import reshape2
 #' @param otu_table a matrix with one column per subject and one row per OTU
 #' @return square matrix of pairwise distances
-#' @seealso \code{\link{simStudyU}}, \code{\link{calcDistW}}
+#' @seealso \code{\link{simStudy}}, \code{\link{calcWJstudy}}
 #' @export
 #' @examples
 #' calcUJstudy(simStudy(c(16,16,16),100,,0.8,0.1))
 calcUJstudy <- function(otu_table) {
-  dm<-as.matrix(vegdist(t(otu_table),method='jaccard',binary=TRUE))
+  dm<-as.matrix(vegan::vegdist(t(otu_table),method='jaccard',binary=TRUE))
   return(dm)
 }
 
 
 #' @title Calculate pairwise weighted Jaccard distances from an OTU table
 #' @description Generates a square matrix of pairwise weighted Jaccard distances from an OTU table.
-#' @import reshape2
 #' @param  otu_table a matrix with one column per subject and one row per OTU
 #' @return square matrix of pairwise distances
-#' @seealso \code{\link{simStudyU}}, \code{\link{calcDistW}}
+#' @seealso \code{\link{simStudy}}, \code{\link{calcWJstudy}}
 #' @export
 #' @examples
 #' calcWJstudy(simStudy(c(16,16,16),100,10,0.8,0.1))
 calcWJstudy <- function(otu_table) {
-  dm<-as.matrix(vegdist(t(otu_table),method='jaccard'))
+  dm<-as.matrix(vegan::vegdist(t(otu_table),method='jaccard'))
   return(dm)
 }
 
@@ -159,7 +158,7 @@ calcWJstudy <- function(otu_table) {
 #' @import ape
 #' @param  otu_table a matrix with one column per subject and one row per OTU
 #' @return An object of the class \code{\link{phylo}}.
-#' @seealso \code{\link{simStudyU}}, \code{\link{simStudyW}}, \code{\link{rtree}}, \code{\link{write.tree}}
+#' @seealso \code{\link{simStudy}}, \code{\link{rtree}}, \code{\link{write.tree}}
 #' @export
 #' @examples
 #' simTreeTable(simStudy(c(16,16,16),100,,0.8,0.1))
@@ -177,7 +176,7 @@ simTreeTable <- function(otu_table) {
 #' @import ape
 #' @param  otu_table_list a list of OTU table matrices with one column per subject and one row per OTU
 #' @return An object of the class \code{\link{phylo}}.
-#' @seealso \code{\link{simPowerU}}, \code{\link{simPowerW}}, \code{\link{rtree}}, \code{\link{write.tree}}
+#' @seealso \code{\link{simPower}}, \code{\link{rtree}}, \code{\link{write.tree}}
 #' @export
 #' @examples
 #' simTreeList(simPower(c(100,100,100),100,10,0.5,seq(0,0.3,length.out=100)))
@@ -191,8 +190,9 @@ simTreeList <- function(otu_table_list) {
 #' @title Export a simulated OTU table to permit analysis of non-Jaccard distances
 #' @description Exports a simulated OTU table as a tab-separated file to permit processing for pairwise distances by bioinformatic pipelines.
 #' @param  otu_table a matrix with one column per subject and one row per OTU
+#' @param  otu_table_name file name to write to (.txt is appended automatically
 #' @return Writes a tab-seperated file to the working directory.
-#' @seealso \code{\link{simStudyU}}, \code{\link{simStudyW}}
+#' @seealso \code{\link{simStudy}}, \code{\link{simStudy}}
 #' @export
 #' @examples
 #' writeOTUtable(simStudy(c(16,16,16),100,1,0.8,0.1),"otu_table_export")
@@ -207,7 +207,7 @@ writeOTUtable <- function(otu_table, otu_table_name) {
 #' @description Exports a list of simulated OTU tables as tab-separated files to permit processing for pairwise distances by bioinformatic pipelines.
 #' @param  otu_table_list a list of OTU table matrices with one column per subject and one row per OTU
 #' @return Writes tab-seperated files to the working directory.
-#' @seealso \code{\link{simPowerU}}, \code{\link{simPowerW}}
+#' @seealso \code{\link{simPower}}
 #' @export
 #' @examples
 #' writeOTUlist(simPower(c(100,100,100),100,1,0.5,seq(0,0.3,length.out=100)))
@@ -250,6 +250,7 @@ readDMdir <- function(dir='.') {
 #' @title Read all QIIME-formatted distance matrices in working directory that are labelled with a specified distance metric
 #' @description Imports all tab-separated distance matrix files in the working directory with names that include the specified distance metric, as output by the QIIME pipeline.
 #' @details A wrapper for the \code{\link{read.delim}} function, tailored to the output from QIIME's beta_diversity.py script.
+#' @param metric regular expression to select file for reading in
 #' @return A list of square distance matrices.
 #' @seealso \code{\link{writeOTUlist}}, \code{\link{readDMdir}}
 #' @export
@@ -323,7 +324,7 @@ calcOmega2 <- function(dm) {
 #' @examples
 #' PERMANOVA(calcUJstudy(simStudy()))
 PERMANOVA <- function(dm) {
-  dm <- adonis(as.dist(dm)~groupNames(colnames(dm)),permutations=1000)
+  dm <- vegan::adonis(as.dist(dm)~groupNames(colnames(dm)),permutations=1000)
   return(dm)
 }
 
@@ -337,7 +338,7 @@ PERMANOVA <- function(dm) {
 #' @export
 #' @examples
 #' calcR2(calcUJstudy(simStudy()))
-calcR2 <- function(perm=PERMANOVA(dm)) {
+calcR2 <- function(perm) {
   cod <- perm$aov.tab$R2[1]
   return(cod)
 }
@@ -351,8 +352,8 @@ calcR2 <- function(perm=PERMANOVA(dm)) {
 #' @seealso \code{\link{calcUJstudy}}, \code{\link{calcWJstudy}}
 #' @export
 #' @examples
-#' calcPERMANOVAp(calcUJstudy(simStudy()))
-calcPERMANOVAp <- function(perm=PERMANOVA(dm)) {
+#' calcPERMANOVAp(PERMANOVA(calcUJstudy(simStudy())))
+calcPERMANOVAp <- function(perm) {
   p <- perm$aov.tab$'Pr(>F)'[1]
   return(p)
 }
@@ -405,7 +406,7 @@ bootPower <- function(dm_list,boot_number=100,subject_group_vector=c(3,4,5),alph
 #' @title Perform bootstrap power analysis
 #' Estimates the statistical power of PERMANOVA testing to detect the group-level effect for a given set of parameters matrices, based upon bootstrap sampling.
 #' @param group_sizes numeric vector representing subjects per exposure/intervention group
-#' @param boot_args a list with named elements specifying additional arguments to \code{\link{bootArgs}}
+#' @param boot_args a list with named elements specifying additional arguments to \code{\link{bootPower}}
 #' @param distance_calc distance function to be used to calculation (either \code{\link{calcUJstudy}} or \code{\link{calcWJstudy}}) 
 #' @param ... additional arguments to \code{\link{simPower}}
 #' @return A data frame with columns effect and power giving the estimted power to detect an effect of a given size

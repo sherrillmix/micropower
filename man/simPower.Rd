@@ -30,7 +30,8 @@ For weighted analysis, specify a sequence depth greater than 1; for unweighted a
 }
 \examples{
 simPower(c(16,16,16),100,10,0.8,seq(0,0.3,length.out=100))
-sapply(simPower(c(16,16,16),100,10,0.8,seq(0,0.3,length.out=100)),FUN=function(x) {calcOmega2(calcWJstudy(x))})
+sapply(simPower(c(16,16,16),100,10,0.8,seq(0,0.3,length.out=100)),
+  FUN=function(x) {calcOmega2(calcWJstudy(x))})
 }
 \seealso{
 \code{\link{simStudy}}, \code{\link{calcUJstudy}}, \code{\link{calcWJstudy}}

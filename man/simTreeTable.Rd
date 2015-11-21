@@ -22,6 +22,6 @@ A wrapper for the \code{\link{rtree}} function included with the \code{\link{ape
 simTreeTable(simStudy(c(16,16,16),100,,0.8,0.1))
 }
 \seealso{
-\code{\link{simStudyU}}, \code{\link{simStudyW}}, \code{\link{rtree}}, \code{\link{write.tree}}
+\code{\link{simStudy}}, \code{\link{rtree}}, \code{\link{write.tree}}
 }
 

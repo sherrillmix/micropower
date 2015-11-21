@@ -4,7 +4,7 @@
 \alias{calcR2}
 \title{Calculate the coefficient of determination (R-squared).}
 \usage{
-calcR2(perm = PERMANOVA(dm))
+calcR2(perm)
 }
 \arguments{
 \item{perm}{output from the \code{\link{PERMANOVA}} function}

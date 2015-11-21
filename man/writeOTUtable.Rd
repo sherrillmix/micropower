@@ -8,6 +8,8 @@ writeOTUtable(otu_table, otu_table_name)
 }
 \arguments{
 \item{otu_table}{a matrix with one column per subject and one row per OTU}
+
+\item{otu_table_name}{file name to write to (.txt is appended automatically}
 }
 \value{
 Writes a tab-seperated file to the working directory.
@@ -19,6 +21,6 @@ Exports a simulated OTU table as a tab-separated file to permit processing for p
 writeOTUtable(simStudy(c(16,16,16),100,1,0.8,0.1),"otu_table_export")
 }
 \seealso{
-\code{\link{simStudyU}}, \code{\link{simStudyW}}
+\code{\link{simStudy}}, \code{\link{simStudy}}
 }
 
