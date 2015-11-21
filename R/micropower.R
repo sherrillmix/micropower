@@ -377,7 +377,6 @@ bootDM <- function(dm,subject_group_vector) {
 
 #' @title Perform bootstrap power analysis on a list of square distance matrices.
 #' @description Estimates the statistical power of PERMANOVA testing to detect the group-level effect in the given distance matrices, based upon bootstrap sampling.
-#' @import plyr
 #' @param dm_list a list of square distance matrices, with names
 #' @param boot_number the number of bootstrap samples to perform on each distance matrix in the list
 #' @param subject_group_vector number of subjects in each group to sample, as a vector.
@@ -396,7 +395,7 @@ bootPower <- function(dm_list,boot_number=100,subject_group_vector=c(3,4,5),alph
   r <- lapply(p,FUN=function(x) {sapply(x,calcR2)})
   p <- lapply(p,FUN=function(x) {sapply(x,calcPERMANOVAp)})
   dm <- data.frame(effect=e,simulated_omega2=simulated_omega2,observed_omega2=do.call(c,o),observed_R2=do.call(c,r),p=do.call(c,p))
-  dm <- ddply(dm,.(effect),here(transform),power=mean(p<alpha))
+  dm <- ave(dm$p<alpha,dm$effect)
   dm$observed_omega2[dm$observed_omega2<0] <- 0
   dm$simulated_omega2[dm$simulated_omega2<0] <- 0
   return(dm)

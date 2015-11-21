@@ -15,7 +15,6 @@ Depends:
     stats,
     permute
 Imports:
-    plyr,
     reshape2,
     ape,
     vegan
