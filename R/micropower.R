@@ -92,29 +92,6 @@ simStudy <- function(group_size_vector=c(100,100,100),otu_number=1000,sequence_d
 }
 
 
-#' @title Simulate OTU table with null group-level effect for presence-absence or abundance-weighted analysis
-#' @description Within-group distances simulated from OTU number and depth of subsampling (rarefying); no group-level differences.
-#' @details For weighted analysis, specify a sequence depth greater than 1; for unweighted analyses, sequence depth is 1 (default).
-#' @param group_size_vector numeric vector representing subjects per exposure/intervention group
-#' @param otu_number number of simulated OTUs
-#' @param sequence_depth number of sequence counts per OTU bin
-#' @param rare_depth proportion of sequence counts to retain after subsampling
-#' @return two-dimensional matrix OTU table, with row and column names to suit downstream analysis
-#' @seealso \code{\link{simStudy}}, \code{\link{simPower}}
-#' @export
-#' @examples
-#' simNull(c(16,16,16),100,10,0.8)
-simNull <- function(group_size_vector=c(100,100,100),otu_number=1000,sequence_depth=1,rare_depth=0.5) {
-  n <- simStudy(group_size_vector,otu_number,sequence_depth,rare_depth,0)
-  n <- n[,grep("g1",colnames(n))]
-  n <- lapply(seq_along(group_size_vector),FUN=function(x) {x <- n})
-  n <- do.call(cbind,n)
-  colnames(n) <- paste0("g",as.character(rep(seq_along(group_size_vector),each=group_size_vector[1])))
-  colnames(n) <- paste0(colnames(n),"s",as.character(rep(seq(group_size_vector[1]),length(group_size_vector))))
-  return(n)
-}
-
-
 #' @title Simulate a list of OTU tables encoding a range of effect sizes for presence-absence or abundance-weighted analysis
 #' @description Extends the \code{\link{simStudy}} function to generate a list of OTU tables according to a specified range of group-level effects.
 #' @details For weighted analysis, specify a sequence depth greater than 1; for unweighted analyses, sequence depth is 1 (default).
@@ -131,10 +108,8 @@ simNull <- function(group_size_vector=c(100,100,100),otu_number=1000,sequence_de
 #' sapply(simPower(c(16,16,16),100,10,0.8,seq(0,0.3,length.out=100)),FUN=function(x) {calcOmega2(calcWJstudy(x))})
 simPower <- function(group_size_vector=c(100,100,100), otu_number=1000, sequence_depth=1, rare_depth=0.5, effect_range=seq(0,0.3,length.out=100)) {
   p <- structure(.Data=as.list(effect_range),.Names=as.character(effect_range))
-  p <- lapply(p,FUN=function(x) {simStudy(group_size_vector,otu_number,sequence_depth,rare_depth,x)})
-  n <- structure(.Data=list(simNull(group_size_vector,otu_number,sequence_depth,rare_depth)),.Names="null")
-  p <- c(n,p)
-  return(p)
+  out <- lapply(p,FUN=function(x) {simStudy(group_size_vector,otu_number,sequence_depth,rare_depth,x)})
+  return(out)
 }
 
 
@@ -295,13 +270,14 @@ readDM <- function(filepath=file.choose()) {
 #' @title Read all QIIME-formatted distance matrices in working directory
 #' @description Imports all tab-separated distance matrix files in the working directory, as output by the QIIME pipeline.
 #' @details A wrapper for the \code{\link{read.delim}} function, tailored to the output from QIIME's beta_diversity.py script.
+#' @param dir directory to list files from
 #' @return A list of square distance matrices.
 #' @seealso \code{\link{writeOTUlist}}, \code{\link{readDM}}
 #' @export
 #' @examples
 #' readDMdir()
-readDMdir <- function() {
-  files <- structure(.Data=as.list(list.files()),.Names=list.files())
+readDMdir <- function(dir='.') {
+  files <- structure(.Data=list.files(dir),.Names=list.files(dir))
   files <- lapply(files,readDM)
   return(files)
 }
@@ -322,18 +298,17 @@ readDMmetric <- function(metric="weighted_normalized_unifrac") {
 }
 
 
-#' @title Convert distance matrix subject names to group-level names.
-#' @description Convert distance matrix subject names to group-level names to permit PERMANOVA testing and analysis of group-level effects.
+#' @title Convert subject names to group-level names.
+#' @description Convert subject names to group-level names to permit PERMANOVA testing and analysis of group-level effects.
 #' @details Input distance matrix colnames and rownames must be formatted "g2s12" for group 2, subject 12.
-#' @param dm a square distance matrix
-#' @return A square distance matrix.
+#' @param x character vector of names to be converted to groups
+#' @return character vector of group names
 #' @seealso \code{\link{calcUJstudy}}, \code{\link{calcWJstudy}}
 #' @export
 #' @examples
 #' groupNames(calcUJstudy(simStudy()))
-groupNames <- function(dm) {
-  dimnames(dm) <- lapply(dimnames(dm),FUN=function(x) {gsub("(s.*)","",x,perl=T)})
-  return(dm)
+groupNames <- function(x){
+  return(gsub("(s.*)","",x,perl=T))
 }
 
 
@@ -361,10 +336,9 @@ lowerTriDM <- function(dm) {
 #' @examples
 #' calcOmega2(calcUJstudy(simStudy()))
 calcOmega2 <- function(dm) {
-  dm <- groupNames(dm)
-  groups <- unique(rownames(dm))
+  groups <- unique(groupNames(rownames(dm)))
   df <- length(groups) - 1
-  dm_within <- structure(.Data=lapply(as.list(groups),FUN=function(x) {dm[rownames(dm)==x,colnames(dm)==x]}),.Names=groups)
+  dm_within <- structure(.Data=lapply(as.list(groups),FUN=function(x) {dm[groupNames(rownames(dm))==x,groupNames(colnames(dm))==x]}),.Names=groups)
   sst <- sum(lowerTriDM(dm)^2)/nrow(dm)
   ssw <- sum(sapply(dm_within,FUN=function(x) {sum(lowerTriDM(x)^2)/nrow(x)}))
   ssa <- sst-ssw
@@ -385,8 +359,7 @@ calcOmega2 <- function(dm) {
 #' @examples
 #' PERMANOVA(calcUJstudy(simStudy()))
 PERMANOVA <- function(dm) {
-  dm <- groupNames(dm)
-  dm <- adonis(as.dist(dm)~colnames(dm),permutations=1000)
+  dm <- adonis(as.dist(dm)~groupNames(colnames(dm)),permutations=1000)
   return(dm)
 }
 
