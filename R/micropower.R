@@ -412,10 +412,10 @@ bootPower <- function(dm_list,boot_number=100,subject_group_vector=c(3,4,5),alph
 #' @seealso \code{\link{simPower}}, \code{\link{bootDM}}
 #' @export
 #' @examples
-#' calculatePower(c(10,10))
-calculatePower<-function(group_sizes,boot_args=list(),distance_calc=c(calcUJstudy,calcWJstudy),...){
+#' calculatePower(c(10,10),otu_number=100,rare_depth=.25,effect_range=seq(0,.3,length.out=10))
+estimatePower<-function(group_sizes,boot_args=list(),distance_calc=calcUJstudy,...){
   otu_tables <- simPower(group_size_vector = group_sizes*20,...)
-  uj <- lapply(otu_tables, distanceCalc)
-  bp <- do.call(bootPower,c(list(uj, subject_group_vector=group_sizes),...))
+  uj <- lapply(otu_tables, distance_calc)
+  bp <- bootPower(uj, subject_group_vector=group_sizes)
   return(unique(bp[,c('effect','power')]))
 }
