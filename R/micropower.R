@@ -30,22 +30,6 @@ rareSamp <- function(otu_vector,rare_depth=0.5) {
 }
 
 
-#' @title Calculate unweighted Jaccard distance between two OTU vectors
-#' @description Wrapper for \code{\link{vegan}} package distance function, to calculate unweighted Jaccard distance.
-#' @import vegan
-#' @param sampleA numeric vector labelled with OTU names
-#' @param sampleB numeric vector labelled with OTU names
-#' @return numeric unweighted Jaccard distance
-#' @seealso \code{\link{simSamp}}, \code{\link{rareSamp}}
-#' @export
-#' @examples
-#' calcUJsample(rareSamp(simSamp(100),0.5),rareSamp(simSamp(100),0.5))
-calcUJsample <- function(sampleA=rareSamp(simSamp(),0.5),sampleB=rareSamp(simSamp(),0.5)) {
-  d <- vegdist(as.data.frame(rbind(sampleA,sampleB)),method="jaccard",binary=T)
-  return(as.numeric(d))
-}
-
-
 #' @title Calculate weighted Jaccard distance between two OTU vectors
 #' @description Wrapper for \code{\link{vegan}} package distance function, to calculate weighted Jaccard distance.
 #' @import vegan
