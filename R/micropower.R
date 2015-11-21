@@ -165,9 +165,11 @@ hashSD <- function(rare_depth=0.5,otu_number_range=c(10,100,1000,10000),sim_numb
 #' @examples
 #' calcUJstudy(simStudy(c(16,16,16),100,,0.8,0.1))
 calcUJstudy <- function(otu_table) {
-  dm <- expand.grid(r=colnames(otu_table),c=colnames(otu_table),stringsAsFactors=FALSE)
-  dm$d <- unlist(Map(function(r,c) {calcUJsample(otu_table[,r],otu_table[,c])},dm$r,dm$c),use.names=FALSE)
-  dm <- acast(dm,r~c,value.var="d")
+  #dm <- expand.grid(r=colnames(otu_table),c=colnames(otu_table),stringsAsFactors=FALSE)
+  #dm$d <- unlist(Map(function(r,c) {calcUJsample(otu_table[,r],otu_table[,c])},dm$r,dm$c),use.names=FALSE)
+  #dm <- acast(dm,r~c,value.var="d")
+  dm<-as.matrix(vegdist(t(otu_table),method='jaccard',binary=TRUE))
+  #browser()
   return(dm)
 }
 
