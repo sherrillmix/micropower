@@ -19,7 +19,7 @@ Imports all tab-separated distance matrix files in the working directory, as out
 A wrapper for the \code{\link{read.delim}} function, tailored to the output from QIIME's beta_diversity.py script.
 }
 \examples{
-readDMdir()
+\dontrun{readDMdir()}
 }
 \seealso{
 \code{\link{writeOTUlist}}, \code{\link{readDM}}

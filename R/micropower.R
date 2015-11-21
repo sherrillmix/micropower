@@ -224,7 +224,7 @@ writeOTUlist <- function(otu_table_list) {
 #' @seealso \code{\link{writeOTUtable}}, \code{\link{readDMdir}}
 #' @export
 #' @examples
-#' readDM()
+#' \dontrun{readDM()}
 readDM <- function(filepath=file.choose()) {
   dm <- as.matrix(read.delim(filepath,header=T,row.names=1))
   return(dm)
@@ -239,7 +239,7 @@ readDM <- function(filepath=file.choose()) {
 #' @seealso \code{\link{writeOTUlist}}, \code{\link{readDM}}
 #' @export
 #' @examples
-#' readDMdir()
+#' \dontrun{readDMdir()}
 readDMdir <- function(dir='.') {
   files <- structure(.Data=list.files(dir),.Names=list.files(dir))
   files <- lapply(files,readDM)
