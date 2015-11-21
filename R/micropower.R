@@ -401,3 +401,21 @@ bootPower <- function(dm_list,boot_number=100,subject_group_vector=c(3,4,5),alph
   dm$simulated_omega2[dm$simulated_omega2<0] <- 0
   return(dm)
 }
+
+#' @title Perform bootstrap power analysis
+#' Estimates the statistical power of PERMANOVA testing to detect the group-level effect for a given set of parameters matrices, based upon bootstrap sampling.
+#' @param group_sizes numeric vector representing subjects per exposure/intervention group
+#' @param boot_args a list with named elements specifying additional arguments to \code{\link{bootArgs}}
+#' @param distance_calc distance function to be used to calculation (either \code{\link{calcUJstudy}} or \code{\link{calcWJstudy}}) 
+#' @param ... additional arguments to \code{\link{simPower}}
+#' @return A data frame with columns effect and power giving the estimted power to detect an effect of a given size
+#' @seealso \code{\link{simPower}}, \code{\link{bootDM}}
+#' @export
+#' @examples
+#' calculatePower(c(10,10))
+calculatePower<-function(group_sizes,boot_args=list(),distance_calc=c(calcUJstudy,calcWJstudy),...){
+  otu_tables <- simPower(group_size_vector = group_sizes*20,...)
+  uj <- lapply(otu_tables, distanceCalc)
+  bp <- do.call(bootPower,c(list(uj, subject_group_vector=group_sizes),...))
+  return(unique(bp[,c('effect','power')]))
+}
