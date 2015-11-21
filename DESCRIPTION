@@ -1,6 +1,6 @@
 Package: micropower
 Title: Power estimation for microbiome studies using pairwise distances and
-    PERMANOVA.
+    PERMANOVA
 Version: 0.4
 Author: Brendan Kelly
 Maintainer: Brendan Kelly <br3nd2n@gmail.com>
@@ -15,7 +15,6 @@ Depends:
     stats,
     permute
 Imports:
-    reshape2,
     ape,
     vegan
 License: GPL-2
