@@ -60,6 +60,29 @@ simStudy <- function(group_size_vector=c(20,30,25),otu_number=1000,sequence_dept
 }
 
 
+#' @title Simulate OTU table with null group-level effect for presence-absence or abundance-weighted analysis
+#' @description Within-group distances simulated from OTU number and depth of subsampling (rarefying); no group-level differences.
+#' @details For weighted analysis, specify a sequence depth greater than 1; for unweighted analyses, sequence depth is 1 (default).
+#' @param group_size_vector numeric vector representing subjects per exposure/intervention group
+#' @param otu_number number of simulated OTUs
+#' @param sequence_depth number of sequence counts per OTU bin
+#' @param rare_depth proportion of sequence counts to retain after subsampling
+#' @return two-dimensional matrix OTU table, with row and column names to suit downstream analysis
+#' @seealso \code{\link{simStudy}}, \code{\link{simPower}}
+#' @export
+#' @examples
+#' simNull(c(16,16,16),100,10,0.8)
+simNull <- function(group_size_vector=c(100,100,100),otu_number=1000,sequence_depth=1,rare_depth=0.5) {
+  n <- simStudy(group_size_vector,otu_number,sequence_depth,rare_depth,0)
+  n <- n[,grep("g1",colnames(n))]
+  n <- lapply(seq_along(group_size_vector),FUN=function(x) {x <- n})
+  n <- do.call(cbind,n)
+  colnames(n) <- paste0("g",as.character(rep(seq_along(group_size_vector),each=group_size_vector[1])))
+  colnames(n) <- paste0(colnames(n),"s",as.character(rep(seq(group_size_vector[1]),length(group_size_vector))))
+  return(n)
+}
+
+
 #' @title Simulate a list of OTU tables encoding a range of effect sizes for presence-absence or abundance-weighted analysis
 #' @description Extends the \code{\link{simStudy}} function to generate a list of OTU tables according to a specified range of group-level effects.
 #' @details For weighted analysis, specify a sequence depth greater than 1; for unweighted analyses, sequence depth is 1 (default).
