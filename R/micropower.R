@@ -73,13 +73,16 @@ simStudy <- function(group_size_vector=c(20,30,25),otu_number=1000,sequence_dept
 #' @examples
 #' simNull(c(16,16,16),100,10,0.8)
 simNull <- function(group_size_vector=c(100,100,100),otu_number=1000,sequence_depth=1,rare_depth=0.5) {
+  max_group<-sprintf('g%ds',which.max(group_size_vector))
   n <- simStudy(group_size_vector,otu_number,sequence_depth,rare_depth,0)
-  n <- n[,grep("g1",colnames(n))]
-  n <- lapply(seq_along(group_size_vector),FUN=function(x) {x <- n})
-  n <- do.call(cbind,n)
-  colnames(n) <- paste0("g",as.character(rep(seq_along(group_size_vector),each=group_size_vector[1])))
-  colnames(n) <- paste0(colnames(n),"s",as.character(rep(seq(group_size_vector[1]),length(group_size_vector))))
-  return(n)
+  n <- n[,grep(max_group,colnames(n))]
+  out <- lapply(1:length(group_size_vector),FUN=function(x){
+    out<-n[,1:group_size_vector[x]]
+    colnames(out)<-sub(max_group,sprintf('g%ds',x),colnames(out))
+    return(out)
+  })
+  out <- do.call(cbind,out)
+  return(out)
 }
 
 
